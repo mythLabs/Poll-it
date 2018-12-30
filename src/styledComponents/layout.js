@@ -5,3 +5,10 @@ export const Container = styled.div`
   max-width: 960px;
   padding: 1.45rem 1.0875rem;
 `;
+
+export const BottomMessage = styled.footer`
+  position: fixed;
+  bottom: 0px;
+`;
+
+

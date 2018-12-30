@@ -6,6 +6,7 @@ import Header from './header';
 import './layout.css';
 
 import { Container as BaseContainerStyles } from '../styledComponents/layout';
+import { BottomMessage } from '../styledComponents/layout';
 
 const Layout = ({ children }) => (
   <StaticQuery
@@ -26,9 +27,9 @@ const Layout = ({ children }) => (
         />
         <BaseContainerStyles>
           {children}
-          <footer>
+          <BottomMessage>
             © 2018, Built with <a href="https://www.gatsbyjs.org">Gatsby</a>
-          </footer>
+          </BottomMessage>
         </BaseContainerStyles>
       </>
     )}
