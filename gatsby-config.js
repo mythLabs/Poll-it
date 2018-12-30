@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
     title: `Poll-It`,
-    description: `You vote matters`,
+    description: `Your vote matters`,
     author: `@mythLabs`,
   },
   plugins: [

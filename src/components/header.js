@@ -9,8 +9,6 @@ const HeaderContainer = styled.header`
   margin-bottom: 1.45rem;
 `;
 
-
-
 const Heading1 = styled.h1`
   margin: 0;
 `;
@@ -34,7 +32,7 @@ const Header = ({ background, title }) => (
 
 Header.defaultProps = {
   background: BACKGROUND,
-  title: "Poll It",
+  title: 'Poll It',
 };
 
 Header.propTypes = {
