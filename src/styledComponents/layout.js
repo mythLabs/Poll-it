@@ -10,5 +10,3 @@ export const BottomMessage = styled.footer`
   position: fixed;
   bottom: 0px;
 `;
-
-

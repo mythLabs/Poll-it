@@ -5,8 +5,12 @@ import { StaticQuery, graphql } from 'gatsby';
 import Header from './header';
 import './layout.css';
 
-import { Container as BaseContainerStyles } from '../styledComponents/layout';
-import { BottomMessage } from '../styledComponents/layout';
+import {
+  Container as BaseContainerStyles,
+  BottomMessage,
+} from '../styledComponents/layout';
+
+const Container = BaseContainerStyles;
 
 const Layout = ({ children }) => (
   <StaticQuery
@@ -25,12 +29,12 @@ const Layout = ({ children }) => (
           background="background-color: #0093E9;background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);"
           title={data.site.siteMetadata.title}
         />
-        <BaseContainerStyles>
+        <Container>
           {children}
           <BottomMessage>
             © 2018, Built with <a href="https://www.gatsbyjs.org">Gatsby</a>
           </BottomMessage>
-        </BaseContainerStyles>
+        </Container>
       </>
     )}
   />
