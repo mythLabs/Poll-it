@@ -25,27 +25,31 @@ const Layout = ({ children }) => (
         }
       }
     `}
-    render={(data) => (
-      
+    render={data => (
       <Auth>
-      {auth => {
-      return (
-        <>
-        <Header
-        background="background-color: #0093E9;background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);"
-        title={data.site.siteMetadata.title}
-        {...auth}
-      />
-      <Container>
-        {children}
-        <BottomMessage>
-          © 2018, Built with <a href="https://www.gatsbyjs.org">Gatsby</a>
-        </BottomMessage>
-      </Container>
-      </>
-      )}}
+        {auth => {
+          const childrenWithProps = React.Children.map(children, child =>
+            React.cloneElement(child, { ...auth }),
+          );
+
+          return (
+            <>
+              <Header
+                background="background-color: #0093E9;background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);"
+                title={data.site.siteMetadata.title}
+                {...auth}
+              />
+              <Container>
+                {childrenWithProps}
+                <BottomMessage>
+                  © 2018, Built with{' '}
+                  <a href="https://www.gatsbyjs.org">Gatsby</a>
+                </BottomMessage>
+              </Container>
+            </>
+          );
+        }}
       </Auth>
-      
     )}
   />
 );

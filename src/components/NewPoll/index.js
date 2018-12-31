@@ -79,9 +79,30 @@ const SortableList = SortableContainer(({ options, ...props }) => {
   );
 });
 
-const NewPoll = props => (
-  <SortableList {...props} lockAxis="y" useDragHandle lockToContainerEdges />
-);
+class NewPoll extends React.Component {
+  componentDidMount() {
+    this.props.onRef(this);
+  }
+
+  componentWillUnmount() {
+    this.props.onRef(undefined);
+  }
+
+  SignIn(type) {
+    return this.props.signIn(type);
+  }
+
+  render() {
+    return (
+      <SortableList
+        {...this.props}
+        lockAxis="y"
+        useDragHandle
+        lockToContainerEdges
+      />
+    );
+  }
+}
 
 NewPoll.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object).isRequired,

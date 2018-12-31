@@ -12,7 +12,6 @@ class FirebaseProvider extends React.Component {
   };
 
   getChildContext() {
-    debugger
     const { firebase } = this.props;
 
     return {
@@ -21,7 +20,6 @@ class FirebaseProvider extends React.Component {
   }
 
   render() {
-    debugger
     const { children } = this.props;
 
     return children;

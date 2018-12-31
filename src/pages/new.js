@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Link from 'gatsby-link';
+import PropTypes from 'prop-types';
 import { arrayMove } from 'react-sortable-hoc';
 import shortId from 'short-id';
+import { navigate } from 'gatsby';
 
 import { Button } from '../styledComponents/theme';
 import { Heading2 } from '../styledComponents/typography';
@@ -18,31 +19,34 @@ const ActionContainer = styled.div`
   justify-content: flex-end;
 `;
 
+const TitleContainer = styled.div`
+  display: inline-flex;
+  width: 350px;
+  flex-direction: column;
+  margin-bottom: 30px;
+`;
+
+const TitleLabel = styled.label`
+  font-weight: bold;
+`;
+
+const TitleInput = styled.input`
+  color: black;
+  font-size: 18px;
+`;
+
 class NewPollPage extends Component {
-  state = {
-    options: [
-      {
-        text: 'Angular',
-        id: '123avcs232',
-        editing: false,
-      },
-      {
-        text: 'React',
-        id: '123av35df2',
-        editing: false,
-      },
-      {
-        text: 'Vue',
-        id: '12323dsdsv35df2',
-        editing: false,
-      },
-      {
-        text: 'Ember',
-        id: 'ac24312v35df2',
-        editing: false,
-      },
-    ],
+  static contextTypes = {
+    firebase: PropTypes.object,
   };
+
+  state = {
+    uid: null,
+    title: '',
+    options: [],
+    loading: false,
+  };
+
   // to keep track of what item is being edited
 
   editing = null;
@@ -148,14 +152,81 @@ class NewPollPage extends Component {
     });
   };
 
+  handleCreate = () => {
+    const pollId = shortId.generate();
+    const { uid } = this.state;
+
+    this.setState({
+      loading: true,
+    });
+
+    if (!uid) {
+      // due to our database rules, we can't write unless a uid exists
+      // signIn('anonymous').then(() => {
+      //   this.createPoll(pollId);
+      // });
+      this.child.SignIn('anonymous').then(() => {
+        this.createPoll(pollId);
+      });
+    } else {
+      this.createPoll(pollId);
+    }
+  };
+
+  handleTitleChange = e => {
+    const { value } = e.target;
+
+    this.setState({
+      title: value,
+    });
+  };
+
+  createPoll(pollId) {
+    const { firebase } = this.context;
+    const { options, title } = this.state;
+
+    firebase.polls
+      .doc(pollId)
+      .set({
+        title,
+        id: pollId,
+        options: options.map(({ text, id }) => ({ text, optionId: id })),
+      })
+      .then(() => {
+        this.setState({
+          options: [],
+          loading: false,
+          title: '',
+        });
+
+        navigate(`/poll/${pollId}`);
+      })
+      .catch(error => {
+        // eslint-disable-next-line no-console
+        console.error(error);
+        // TODO: notify the user of the error
+      });
+  }
+
   render() {
-    const { options } = this.state;
+    const { options, loading, title } = this.state;
+    const optionsWithText = options.filter(({ text }) => !!text.trim());
+    const disableCreate = !title || optionsWithText.length < 2 || loading;
 
     return (
       <Layout>
         <SEO title="New Poll" keywords={[`gatsby`, `application`, `react`]} />
         <Heading2>Create a new Poll</Heading2>
+        <TitleContainer>
+          <TitleLabel htmlFor="newPollTitle">Title</TitleLabel>
+          <TitleInput
+            id="newPollTitle"
+            value={title}
+            onChange={this.handleTitleChange}
+          />
+        </TitleContainer>
         <NewPoll
+          onRef={ref => (this.child = ref)}
           options={options}
           onToggleEdit={this.handleToggleEdit}
           onTextChange={this.handleTextChange}
@@ -164,10 +235,17 @@ class NewPollPage extends Component {
           onDelete={this.handleDelete}
         />
         <ActionContainer>
-          <Link to="/new">
-            <Button>Create</Button>
-          </Link>
-          <CreateButton onClick={this.handleAddItem}>Add</CreateButton>
+          <Button
+            disabled={disableCreate}
+            onClick={!disableCreate && this.handleCreate}>
+            {loading ? 'Creating...' : 'Create'}
+          </Button>
+
+          <CreateButton
+            disabled={loading}
+            onClick={!loading && this.handleAddItem}>
+            Add
+          </CreateButton>
         </ActionContainer>
       </Layout>
     );

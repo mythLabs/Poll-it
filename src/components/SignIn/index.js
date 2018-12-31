@@ -20,18 +20,18 @@ const Container = styled.button`
 `;
 
 const Signin = ({ onClick, icon, text }) => {
-    return (
-      <Container onClick={onClick}>
-        {icon && cloneElement(icon)}
-        <span>{text}</span>
-      </Container>
-    );
-  };
-  
-  Signin.propTypes = {
-    onClick: PropTypes.func.isRequired,
-    icon: PropTypes.element,
-    text: PropTypes.string.isRequired,
-  };
-  
-  export default Signin;
+  return (
+    <Container onClick={onClick}>
+      {icon && cloneElement(icon)}
+      <span>{text}</span>
+    </Container>
+  );
+};
+
+Signin.propTypes = {
+  onClick: PropTypes.func.isRequired,
+  icon: PropTypes.element,
+  text: PropTypes.string.isRequired,
+};
+
+export default Signin;
